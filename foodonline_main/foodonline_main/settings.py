@@ -11,20 +11,23 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+TAMPLATE_DIRS = os.path.join(BASE_DIR, "templates")
+STATIC_DIR = os.path.join(BASE_DIR, 'static')
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-dnv75xxqja9nbrut0fk=wu7bvwjg6-v=j4^o37h0ly@7)-2r20"
+SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config("DEBUG",cast=bool)
 
 ALLOWED_HOSTS = []
 
@@ -55,7 +58,7 @@ ROOT_URLCONF = "foodonline_main.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [TAMPLATE_DIRS],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -74,10 +77,21 @@ WSGI_APPLICATION = "foodonline_main.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
+#     }
+# }
+
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE":"django.db.backends.postgresql",
+        "NAME":config("DB_Name"),
+        "USER":config("DB_USER"),
+        "PASSWORD":config("DB_PASSWORD"),
+        "HOST":config("DB_HOST"),
+        'PORT':config("DB_PORT"),
     }
 }
 
@@ -117,8 +131,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = "static/"
+# STATIC_ROOT = BASE_DIR /"static/"
+# STATICFILES_DIRS = [
+#     'foodonline_main/static'
+# ]
+STATICFILES_DIRS = [
+    STATIC_DIR,
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+#U#djangoadmin#P#djangoadmin
